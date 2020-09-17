@@ -28,14 +28,15 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         if(Auth::check()) {
+            $date = date("Y-m-d H:i:s");
             Project::create([
                 'name' => $request['name'],
                 'description' => $request['description'],
-                'date' => now(),
+                'date' => strval($date),
                 'user_id' => Auth::id(),
             ]);
         }
-
+        var_dump($date);
         return redirect('/project');
     }
 

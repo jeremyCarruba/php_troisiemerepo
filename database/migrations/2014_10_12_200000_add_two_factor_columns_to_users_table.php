@@ -33,6 +33,9 @@ class AddTwoFactorColumnsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('two_factor_secret');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('two_factor_recovery_codes');
         });
     }

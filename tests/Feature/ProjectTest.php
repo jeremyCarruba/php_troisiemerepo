@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProjectTest extends TestCase{
 
     use \Illuminate\Foundation\Testing\DatabaseMigrations;
+    use RefreshDatabase;
 
     public function testProjectHTTPGet() {
         $response = $this->get('/project');
