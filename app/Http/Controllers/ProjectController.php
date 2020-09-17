@@ -42,7 +42,7 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = Project::findOrFail($id);
-        if(Auth::id() == $project->user_id) {
+        if(Auth::check() && Auth::id() == $project->user_id) {
             return view('project-edit', ['project' => $project]);
         } else {
             return redirect('/project');
