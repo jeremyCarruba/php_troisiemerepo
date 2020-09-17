@@ -91,4 +91,37 @@ class ProjectTest extends TestCase{
                     ->get('/project')
                     ->assertSee($value, $escaped=false);
     }
+
+    public function testOnlyAuthorCanEditProject() {
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user->id]);
+
+        $path = '/project/' . $project->id;
+
+        $response = $this->actingAs($user)
+                        ->get($path)
+                        ->assertSee('Modifier ce projet');
+
+        $response1 = $this->actingAs($user1)
+                        ->get($path)
+                        ->assertDontSee('Modifier ce projet');
+
+        $response2 =$this->actingAs($user1)
+                        ->get('/project-edit/' . $project->id)
+                        ->assertStatus(302);
+
+        $newInfos = [
+            'name' => 'weeeesh',
+            'description' => 'la description du cul',
+            'date' => date("Y/m/d"),
+            'author' => $user->id
+        ];
+        $response3 = $this->actingAs($user1)
+                        ->post('/project-edit/' . $project->id, $newInfos)
+                        ->dump();
+
+        $response4 = $this->get('/project')
+                    ->assertDontSee('weeeesh');
+    }
 }

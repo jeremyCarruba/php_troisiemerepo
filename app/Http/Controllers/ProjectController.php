@@ -52,10 +52,11 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $project=Project::findOrFail($id);
-        $project->name=$request->name;
-        $project->description=$request->description;
-
-        $project->save();
+        if(Auth::id() == $project->user_id){
+            $project->name=$request->name;
+            $project->description=$request->description;
+            $project->save();
+        }
 
         return redirect('/project');
     }
