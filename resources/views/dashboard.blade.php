@@ -1,15 +1,15 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-jet-welcome />
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@section('page_title', 'DASHBOARD!!!')
+@section('css')
+<link href="{{asset('css/style_home.css') }}" rel="stylesheet">
+@endsection
+
+
+@section('content')
+<h1>Hello {{$user->first_name}}</h1>
+<ul>
+    <a href="/logout"><li>Logging out</li></a>
+    <a href="/profile-edit"><li>Changing contact informations</li></a>
+</ul>
+@endsection

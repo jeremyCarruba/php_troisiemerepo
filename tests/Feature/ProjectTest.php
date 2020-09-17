@@ -48,4 +48,34 @@ class ProjectTest extends TestCase{
         $value = $project->user->first_name;
         $response->assertSee($value, $escaped = true);
     }
+
+    public function testAuthUserCanAddProject() {
+        $user = User::factory()->create();
+        $formInfos = [
+            'name' => 'le projet du cul',
+            'description' => 'la description du cul',
+            'date' => date("Y/m/d"),
+            'author' => $user->id
+        ];
+        $response = $this->actingAs($user)
+                        ->post('/project-create', $formInfos);
+
+        $response_1 = $this->get('/project')
+                        ->assertSee('le projet du cul');
+    }
+
+    public function testNonAuthUserCantAddProject(){
+        $user = User::factory()->create();
+        $formInfos = [
+            'name' => 'le projet du cul',
+            'description' => 'la description du cul',
+            'date' => date("Y/m/d"),
+            'author' => $user->id
+        ];
+        $response = $this->post('/project-create', $formInfos)
+        ->dump();
+
+        $response_1 = $this->get('/project')
+                        ->assertDontSee('le projet du cul');
+    }
 }
