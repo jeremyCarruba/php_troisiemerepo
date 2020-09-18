@@ -18,11 +18,13 @@ class ProjectController extends Controller
     public function show($id)
     {
         $isOwner = false;
+        $donations=[];
         $project = Project::findOrFail($id);
-        if(Auth::id() == $project->id){
+        if(Auth::id() == $project->user_id){
             $isOwner = true;
+            $donations = $project->donations;
         }
-        return view('thisproject' , ['project' => $project, 'isOwner' => $isOwner]);
+        return view('thisproject' , ['project' => $project, 'isOwner' => $isOwner, 'donations' => $donations]);
     }
 
     public function store(Request $request)
@@ -57,8 +59,9 @@ class ProjectController extends Controller
             $project->name=$request->name;
             $project->description=$request->description;
             $project->save();
+            return redirect('/project');
+        } else {
+            abort(401);
         }
-
-        return redirect('/project');
     }
 }

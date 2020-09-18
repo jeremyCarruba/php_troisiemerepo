@@ -1,0 +1,30 @@
+
+
+body{
+    height: 100%;
+    background-color: rgba(244,245,247,var(--bg-opacity));;
+}
+
+.header{
+    padding: 50px !important;
+    text-align: center;
+}
+
+.perso-titles{
+    font-size: 4rem;
+}
+
+.nav li{
+    padding: 5px !important;
+    padding-top: 0px !important;
+    text-decoration: none;
+}
+
+.overlay{
+    position: absolute;
+    background-color: rgb(200,200,200, 0.5);
+    font-size: 2rem;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+}

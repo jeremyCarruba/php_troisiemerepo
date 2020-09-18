@@ -12,7 +12,7 @@ class DonationFee
     const FIXEDFEE = 50;
 
     public function __construct(int $donation, int $commissionPercentage)
-    {   
+    {
         if($donation >= 100) {
             if($commissionPercentage <= 30 && $commissionPercentage > 0) {
                 $this->donation = $donation;
@@ -41,14 +41,8 @@ class DonationFee
 
     public function getAmountCollected()
     {
-        // return $this->donation-($this->getCommissionAmount());
         return $this->donation-$this->getFixedAndCommissionFeeAmount();
     }
-
-    // public function getAmountCollectedAfterFee()
-    // {
-    //     return $this->donation-$this->getFixedAndCommissionFeeAmount();
-    // }
 
     public function getSummary() {
         $summary = [

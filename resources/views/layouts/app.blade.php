@@ -9,9 +9,11 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/perso.css') }}">
 
         {{-- @livewireStyles --}}
 
@@ -20,34 +22,40 @@
     </head>
     <body class="font-sans antialiased">
         @if (Route::has('login'))
+        <ul class="nav">
+
+
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">Dashboard</a>
+                        <li><a href="{{ url('/dashboard') }}" >Dashboard</a></li>
 
                     @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Login</a>
+                        <li><a href="{{ route('login') }}" >Login</a></li>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
+                        <li><a href="{{ route('register') }}" >Register</a></li>
                         @endif
                     @endif
                     <a href="/">Home bro</a>
                 </div>
                 @endif
+        </ul>
         <div class="min-h-screen bg-gray-100">
             {{-- @livewire('navigation-dropdown') --}}
 
             <!-- Page Heading -->
             <header>
                 <div class="header-bloc">
-                    <div class="header">
+                    <div class="header perso-titles">
                         <h1>@yield('page_title')</h1>
                     </div>
             </header>
 
             <!-- Page Content -->
             <main>
+                <div class="container">
                 @yield('content')
+                </div>
             </main>
         </div>
 

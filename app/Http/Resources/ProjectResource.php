@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 
 class ProjectResource extends JsonResource
 {
@@ -14,6 +16,13 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'date' =>  $this->date,
+            'user_id' => $this->userId,
+            'author' => new UserResource(User::find($this->user_id))
+        ];
     }
 }

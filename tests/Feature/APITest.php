@@ -33,4 +33,13 @@ class APITest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonFragment([$project->name]);
     }
+
+    public function testApiAuthorNameOnProjectPage()
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user->id]);
+        $response = $this->get('/api/project/' . $project->id);
+        $response->assertStatus(200);
+        $response->assertJsonFragment([$user->first_name]);
+    }
 }

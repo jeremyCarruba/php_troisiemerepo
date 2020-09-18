@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DonationController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Project;
@@ -37,12 +38,15 @@ Route::get('/api/user/{id}', function($id) {
 });
 
 Route::get('/api/project', function() {
-    return new ProjectResource(Project::all());
+    return ProjectResource::collection(Project::all());
 });
 
 Route::get('/api/project/{id}', function($id) {
     return new ProjectResource(Project::find($id));
 });
+
+Route::post('/donation-create', [DonationController::class, 'store']);
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard', ['user'=>Auth::user()]);

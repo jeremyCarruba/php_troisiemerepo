@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Donation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProjectTest extends TestCase{
@@ -120,8 +121,8 @@ class ProjectTest extends TestCase{
             'author' => $user->id
         ];
         $response3 = $this->actingAs($user1)
-                        ->post('/project-edit/' . $project->id, $newInfos)
-                        ->dump();
+                        ->post('/project-edit/' . $project->id, $newInfos);
+
 
         $response4 = $this->get('/project')
                     ->assertDontSee('weeeesh');
