@@ -31,6 +31,23 @@ class PaymentTest extends TestCase
         foreach($donation->payments as $payment){
             $this->assertInstanceOf(Payment::class, $payment);
         }
+    }
 
+    public function testIfPaymentCantTopDonation(){
+        $donation = Donation::factory()->create(['amount' => 100]);
+        $payment = Payment::factory()->create(['donation_id' => $donation->id, 'amount' => 105]);
+        $this->assertEmpty($donation->payments);
+
+        $payment1 = Payment::factory()->create(['donation_id' => $donation->id, 'amount' => 89]);
+
+        foreach($donation->payments as $payment){
+            $this->assertInstanceOf(Payment::class, $donation->payments);
+        }
+    }
+
+    public function testPayingADonationAlreadyPaid(){
+        $donation = Donation::factory()->create(['status' => 1]);
+        $payment = Payment::factory()->create(['donation_id' => $donation->id, 'amount' => 30]);
+        $this->assertEmpty($donation->payments);
     }
 }

@@ -9,14 +9,29 @@ class Payment extends Model
 {
     use HasFactory;
 
-    public function __construct(array $attributes)
+    protected static function boot()
     {
-    var_dump($attributes);
-    $thisDonation = Donation::find($attributes["donation_id"]);
-    $leftToPay = $thisDonation->amount - $thisDonation->amountPaid;
-        if($attributes['amount']< $leftToPay){
-            parent::__construct($attributes);
-        }
+        parent::boot();
+
+        static::creating(function($model){
+            $thisDonation = Donation::find($model->donation_id);
+            if($thisDonation->status ==1){
+                echo 'deleting event';
+                return false;
+            }
+
+            $leftToPay = ($thisDonation->amount) - ($thisDonation->amountPaid);
+            if($model->amount > $leftToPay){
+                echo 'deleting event';
+                return false;
+            }
+
+            if($model->amount == $leftToPay){
+                $thisDonation->status == 1;
+            }
+            $thisDonation->amountPaid = $thisDonation->amountPaid + $model->amount;
+            $thisDonation->save();
+        });
     }
 
 
