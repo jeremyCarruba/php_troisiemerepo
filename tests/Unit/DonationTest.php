@@ -68,7 +68,7 @@ class DonationTest extends TestCase
 
         $response = $this->actingAs($user)
                     ->get('/project/'. $project->id)
-                    ->assertSee('Donation = '.$donation1->amount);
+                    ->assertSee('Donation = '. ($donation1->amount) / 100);
 
         $response1 = $this->actingAs($user)
                     ->get('/project/'. $project->id)

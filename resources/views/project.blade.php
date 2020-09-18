@@ -30,6 +30,7 @@
         <th scope="col">Nom du projet</th>
         <th scope="col">Description</th>
         <th scope="col">Auteur</th>
+        <th scope="col">Donation</th>
       </tr>
     </thead>
     <tbody>
@@ -40,6 +41,7 @@
     <td><a href="/project/{{$project->id}}">{{$project->name}}</a></td>
     <td>{{$project->description}}</td>
     <td>{{$project->user->first_name}} {{$project->user->last_name}}</td>
+    <td>{{$project->amountCollected / 100}} euros</td>
 </tr>
 
 @endforeach

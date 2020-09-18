@@ -12,6 +12,14 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::orderBy('name', 'ASC')->get();
+
+        foreach($projects as $project) {
+            $amountCollected = 0;
+            foreach($project->donations as $donation) {
+                $amountCollected = $amountCollected + $donation->amount;
+            }
+            $project->amountCollected = $amountCollected;
+        }
         return view('project', ['projects' => $projects]);
     }
 
@@ -22,9 +30,15 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
         if(Auth::id() == $project->user_id){
             $isOwner = true;
-            $donations = $project->donations;
         }
-        return view('thisproject' , ['project' => $project, 'isOwner' => $isOwner, 'donations' => $donations]);
+        $amountCollected = 0;
+        $donations = $project->donations;
+        foreach($donations as $donation) {
+            if($donation->status == 1){
+                $amountCollected = $amountCollected + $donation->amount;
+            }
+        }
+        return view('thisproject' , ['project' => $project, 'isOwner' => $isOwner, 'donations' => $donations, 'amountCollected' => $amountCollected/100]);
     }
 
     public function store(Request $request)
@@ -37,9 +51,10 @@ class ProjectController extends Controller
                 'date' => strval($date),
                 'user_id' => Auth::id(),
             ]);
+            return redirect('/project');
+        } else {
+            abort(401);
         }
-        var_dump($date);
-        return redirect('/project');
     }
 
     public function edit($id)

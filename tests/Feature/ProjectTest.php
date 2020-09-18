@@ -88,31 +88,7 @@ class ProjectTest extends TestCase{
     }
 
     public function testAuthCanAddProject(){
-        $value = '<form action="/project-create" method="POST">';
         $user = User::factory()->create();
-        $response = $this->actingAs($user)
-                    ->get('/project')
-                    ->assertSee($value, $escaped=false);
-    }
-
-    public function testOnlyAuthorCanEditProject() {
-        $user = User::factory()->create();
-        $user1 = User::factory()->create();
-        $project = Project::factory()->create(['user_id' => $user->id]);
-
-        $path = '/project/' . $project->id;
-
-        $response = $this->actingAs($user)
-                        ->get($path)
-                        ->assertSee('Modifier ce projet');
-
-        $response1 = $this->actingAs($user1)
-                        ->get($path)
-                        ->assertDontSee('Modifier ce projet');
-
-        $response2 =$this->actingAs($user1)
-                        ->get('/project-edit/' . $project->id)
-                        ->assertStatus(302);
 
         $newInfos = [
             'name' => 'weeeesh',
@@ -120,11 +96,37 @@ class ProjectTest extends TestCase{
             'date' => date("Y/m/d"),
             'author' => $user->id
         ];
-        $response3 = $this->actingAs($user1)
-                        ->post('/project-edit/' . $project->id, $newInfos);
 
+        $response = $this
+        ->post('/project-create', $newInfos)
+        ->assertUnauthorized();
 
-        $response4 = $this->get('/project')
-                    ->assertDontSee('weeeesh');
+        $response = $this->actingAs($user)
+                    ->post('/project-create', $newInfos)
+                    ->assertStatus(302);
+    }
+
+    public function testOnlyAuthorCanEditProject() {
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user->id]);
+
+        $newInfos = [
+            'name' => 'weeeesh',
+            'description' => 'la description du cul',
+            'date' => date("Y/m/d"),
+            'author' => $user->id
+        ];
+
+        $response1 = $this->actingAs($user1)
+                        ->post('/project-edit/' . $project->id, $newInfos)
+                        ->assertUnauthorized();
+
+        $response2 =$this->actingAs($user)
+                        ->post('/project-edit/' . $project->id, $newInfos)
+                        ->assertStatus(302);
+        $response3 = $this->get('/project')
+                        ->assertSee('weeeesh');;
+
     }
 }

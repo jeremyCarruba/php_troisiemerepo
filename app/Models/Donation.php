@@ -22,4 +22,8 @@ class Donation extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function payments(){
+        return $this->hasMany(Payment::class, 'id');
+    }
 }
