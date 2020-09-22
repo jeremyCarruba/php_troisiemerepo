@@ -2,10 +2,15 @@
 
 namespace Tests\Unit;
 
+use App\Mail\PaymentMade;
+use App\Mail\PaymentMadeAuthor;
 use Tests\TestCase;
 use App\Models\Donation;
+use App\Models\Project;
+use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentTest extends TestCase
 {
@@ -49,5 +54,27 @@ class PaymentTest extends TestCase
         $donation = Donation::factory()->create(['status' => 1]);
         $payment = Payment::factory()->create(['donation_id' => $donation->id, 'amount' => 30]);
         $this->assertEmpty($donation->payments);
+    }
+
+    public function testMailSent(){
+        Mail::fake();
+        $author = User::factory()->create();
+        $payer = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $author->id]);
+        $donation = Donation::factory()->create(['user_id' => $payer->id, 'project_id' => $project->id]);
+        $payment = [
+            'donation_id' => $donation->id,
+            'amount' => 30,
+        ];
+        $reponse = $this->actingAs($payer)
+                    ->post('/paiement', $payment);
+
+        Mail::assertSent(PaymentMade::class, function ($mail) use ($payer) {
+            return $mail->hasTo($payer->email);
+        });
+
+        Mail::assertSent(PaymentMadeAuthor::class, function ($mail) use ($author) {
+            return $mail->hasTo($author->email);
+        });
     }
 }

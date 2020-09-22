@@ -20,7 +20,7 @@ class APITest extends TestCase
     {
         $user = User::factory()->create();
         $project = Project::factory()->create(['user_id' => $user->id]);
-        $response = $this->get('/api/project');
+        $response = $this->getJson('/api/project');
         $response->assertStatus(200);
         $response->assertJsonFragment([$project->name]);
     }
@@ -29,7 +29,7 @@ class APITest extends TestCase
     {
         $user = User::factory()->create();
         $project = Project::factory()->create(['user_id' => $user->id]);
-        $response = $this->get('/api/project/' . $project->id);
+        $response = $this->getJson('/api/project/' . $project->id);
         $response->assertStatus(200);
         $response->assertJsonFragment([$project->name]);
     }
@@ -38,7 +38,7 @@ class APITest extends TestCase
     {
         $user = User::factory()->create();
         $project = Project::factory()->create(['user_id' => $user->id]);
-        $response = $this->get('/api/project/' . $project->id);
+        $response = $this->getJson('/api/project/' . $project->id);
         $response->assertStatus(200);
         $response->assertJsonFragment([$user->first_name]);
     }

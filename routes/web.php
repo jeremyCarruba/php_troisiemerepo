@@ -4,11 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\PaiementController;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\Project;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\ProjectResource;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +23,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/payment', [PaiementController::class, 'index']);
+Route::post('/paiement', [PaiementController::class, 'store']);
+
+
 Route::get('/project', [ProjectController::class, 'index']);
 Route::get('/project/{id}', [ProjectController::class, 'show']);
 Route::post('/project-create', [ProjectController::class, 'store']);
@@ -33,17 +35,11 @@ Route::post('/project-edit/{id}', [ProjectController::class, 'update']);
 
 Route::get('/logout', [UserController::class, 'logout']);
 
-Route::get('/api/user/{id}', function($id) {
-    return new UserResource(User::find($id));
-});
+// Route::get('/api/user/{id}', function($id) {
+//     return new UserResource(User::find($id));
+// });
 
-Route::get('/api/project', function() {
-    return ProjectResource::collection(Project::all());
-});
 
-Route::get('/api/project/{id}', function($id) {
-    return new ProjectResource(Project::find($id));
-});
 
 Route::post('/donation-create', [DonationController::class, 'store']);
 

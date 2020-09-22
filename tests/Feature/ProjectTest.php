@@ -61,7 +61,8 @@ class ProjectTest extends TestCase{
             'author' => $user->id
         ];
         $response = $this->actingAs($user)
-                        ->post('/project-create', $formInfos);
+                        ->post('/project-create', $formInfos)
+                        ->assertStatus(201);
 
         $response_1 = $this->get('/project')
                         ->assertSee('le projet du cul');
@@ -75,7 +76,8 @@ class ProjectTest extends TestCase{
             'date' => date("Y/m/d"),
             'author' => $user->id
         ];
-        $response = $this->post('/project-create', $formInfos);
+        $response = $this->post('/project-create', $formInfos)
+                    ->assertUnauthorized();
 
         $response_1 = $this->get('/project')
                         ->assertDontSee('le projet du cul');
@@ -103,28 +105,28 @@ class ProjectTest extends TestCase{
 
         $response = $this->actingAs($user)
                     ->post('/project-create', $newInfos)
-                    ->assertStatus(302);
+                    ->assertStatus(201);
     }
 
     public function testOnlyAuthorCanEditProject() {
-        $user = User::factory()->create();
-        $user1 = User::factory()->create();
-        $project = Project::factory()->create(['user_id' => $user->id]);
+        $author = User::factory()->create();
+        $notAuthor = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $author->id]);
 
         $newInfos = [
             'name' => 'weeeesh',
             'description' => 'la description du cul',
             'date' => date("Y/m/d"),
-            'author' => $user->id
+            'author' => $author->id
         ];
 
-        $response1 = $this->actingAs($user1)
+        $response1 = $this->actingAs($notAuthor)
                         ->post('/project-edit/' . $project->id, $newInfos)
                         ->assertUnauthorized();
 
-        $response2 =$this->actingAs($user)
+        $response2 =$this->actingAs($author)
                         ->post('/project-edit/' . $project->id, $newInfos)
-                        ->assertStatus(302);
+                        ->assertStatus(201);
         $response3 = $this->get('/project')
                         ->assertSee('weeeesh');;
 

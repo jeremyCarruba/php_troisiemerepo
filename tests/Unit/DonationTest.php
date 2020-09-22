@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Donation;
+use App\Support\DonationFee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
@@ -43,10 +44,16 @@ class DonationTest extends TestCase
             'amount' => 1000,
             'project_id' => $project->id
         ];
+        $donationFee = new DonationFee($donation['amount'], 10);
+
         $response = $this
         ->actingAs($user)
                 ->post('/donation-create', $donation)
-                ->assertSuccessful();
+                ->assertCreated();
+
+        $response1 = $this->actingAs($user)
+                    ->get('/project/'.$project->id)
+                    ->assertSee($donationFee->getAmountCollected());
     }
 
     public function testNonAuthCantDonate(){

@@ -9,6 +9,11 @@ class Payment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'donation_id',
+        'amount'
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -26,10 +31,10 @@ class Payment extends Model
                 return false;
             }
 
-            if($model->amount == $leftToPay){
-                $thisDonation->status == 1;
-            }
             $thisDonation->amountPaid = $thisDonation->amountPaid + $model->amount;
+            if($thisDonation->amountPaid == $thisDonation->amount){
+                $thisDonation->status = 1;
+            }
             $thisDonation->save();
         });
     }

@@ -34,9 +34,7 @@ class ProjectController extends Controller
         $amountCollected = 0;
         $donations = $project->donations;
         foreach($donations as $donation) {
-            if($donation->status == 1){
-                $amountCollected = $amountCollected + $donation->amount;
-            }
+                $amountCollected = $amountCollected + $donation->amountPaid;
         }
         return view('thisproject' , ['project' => $project, 'isOwner' => $isOwner, 'donations' => $donations, 'amountCollected' => $amountCollected/100]);
     }
@@ -51,7 +49,7 @@ class ProjectController extends Controller
                 'date' => strval($date),
                 'user_id' => Auth::id(),
             ]);
-            return redirect('/project');
+            return redirect('/project', 201);
         } else {
             abort(401);
         }
@@ -74,7 +72,7 @@ class ProjectController extends Controller
             $project->name=$request->name;
             $project->description=$request->description;
             $project->save();
-            return redirect('/project');
+            return redirect('/project', 201);
         } else {
             abort(401);
         }
